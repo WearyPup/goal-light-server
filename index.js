@@ -1,12 +1,13 @@
 const express = require("express");
 const app = express();
 
+// ===== CONFIG =====
+const TEAM = "MTL"; // change ici ton équipe (MTL, TOR, BOS, etc.)
+
 let goal = false;
 let lastScore = 0;
 
-// 👉 CHANGE ICI TON ÉQUIPE
-const TEAM = "MTL"; // Canadiens
-
+// ===== CHECK NHL =====
 async function checkGoal() {
   try {
     const res = await fetch("https://api-web.nhle.com/v1/score/now");
@@ -42,16 +43,39 @@ async function checkGoal() {
   }
 }
 
-// check chaque 10 secondes
+// Vérifie toutes les 10 secondes
 setInterval(checkGoal, 10000);
 
+// ===== ROUTES =====
+
+// test simple
+app.get("/", (req, res) => {
+  res.send("Goal Light Server running");
+});
+
+// pour ESP32
 app.get("/goal", (req, res) => {
   res.json({ goal });
   goal = false; // reset après lecture
 });
 
+// pour tester manuellement
+app.get("/trigger", (req, res) => {
+  goal = true;
+  console.log("TEST BUT déclenché");
+  res.json({ success: true, goal });
+});
+
+// reset manuel
+app.get("/reset", (req, res) => {
+  goal = false;
+  lastScore = 0;
+  res.json({ success: true, goal });
+});
+
+// ===== START SERVER =====
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log("Serveur lancé");
+  console.log("Serveur lancé sur port", PORT);
 });
