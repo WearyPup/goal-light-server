@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 
 // ===== CONFIG =====
-const TEAM = "MTL"; // change ici ton équipe (MTL, TOR, BOS, etc.)
+const TEAM = "DAL"; // change ici ton équipe (MTL, TOR, BOS, etc.)
 
 let goal = false;
 let lastScore = 0;
@@ -44,7 +44,7 @@ async function checkGoal() {
 }
 
 // Vérifie toutes les 10 secondes
-setInterval(checkGoal, 10000);
+setInterval(checkGoal, 2000);
 
 // ===== ROUTES =====
 
